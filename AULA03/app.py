@@ -12,11 +12,52 @@ import time
 import requests, bs4     # pip install beautifulsoup4 requests
 import mysql.connector    # pip install mysql-connector-python
 
-mypath = '/home/flaskman/Documentos/curso_flask_puc/AULA03/downloads'  # path de onde arquivo sera salvo
-username = getpass.getuser()
+mypath = '/home/flaskman/Downloads/curso_flask_puc/AULA03/downloads'  # path de onde arquivo sera salvo
+username = 'Walter'  #getpass.getuser()
 
 app = Flask(__name__)
 
+
+@app.route('/', methods=['GET', 'POST'])
+def uploadFiles():
+	"""
+	Descricao: essa rota direciona a requisicao para uma pagina de upload de arquivos.
+	"""
+	if request.method == 'POST':
+		if 'file' not in request.files:
+			return render_template('upload_files.html', username=username)
+
+		files = request.files.getlist('file')
+
+		for file in files:
+			filename = secure_filename(file.filename)
+			file.save(os.path.join(mypath,filename))
+
+		onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+
+		return render_template('relatorio.html', username=username, onlyfiles=onlyfiles)
+	
+	return render_template('upload_files.html', username=username)
+
+
+@app.route('/download', methods=['GET', 'POST'])
+def downloadFiles():
+	"""
+	Descricao: essa rota direciona a requisicao para uma pagina de download de arquivos.
+	"""
+	if request.method == 'POST':
+		filename = request.form['filename']
+
+		onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+		
+		if 'filename' not in request.form:
+			return render_template('upload_files.html', username=username, onlyfiles=onlyfiles)
+		
+		path = "downloads/"+filename
+		return send_file(path, as_attachment=True)
+
+	onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+	return render_template('download_file.html', username=username, onlyfiles=onlyfiles)
 
 
 @app.route('/weather', methods=['GET', 'POST'])
