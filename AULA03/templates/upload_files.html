@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<title>Upload de arquivos</title>
+
+<html>
+
+<head>
+
+	<!--<link href="../static/bootstrap.min.css" rel="stylesheet">  -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		.listaOpcoesEnvio {
+			color: #000000;
+			display: inline;
+			padding: 16px;
+			text-decoration: none;
+			text-align: center;
+		}
+
+		#btnEnviar {
+			background-color: #000000;
+			color: #ffffff;
+			position: relative;
+			float: right;
+			width: 200px;
+			height: 50px;
+			margin: 15px, 10px, 15px, 10px;
+			clear: both;
+		}
+
+		.row::after {
+			content: "";
+			clear: both;
+			display: block;
+		}
+
+		[class*="col-"] {
+			float: left;
+			padding: 15px;
+		}
+
+		html {
+			font-family: "Lucida Sans", sans-serif;
+		}
+
+		body {
+			font-family: "Lucida Sans", sans-serif;
+			font-size: 14px;
+			background-color: #ffffff;
+			color: #000000;
+			padding: 10px;
+			border-style: solid;
+			border-width: 5px;
+			border-color: black;
+		}
+
+		.header {
+			background-color: #9933cc;
+			color: #ffffff;
+			padding: 15px;
+		}
+
+
+		.aside {
+			background-color: #33b5e5;
+			padding: 15px;
+			color: #ffffff;
+			text-align: center;
+			font-size: 14px;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+		}
+
+		.duasColunas {
+			border: 15px;
+			overflow: auto;
+		}
+
+		.colunaEsquerda {
+			position: relative;
+			float: left;
+			margin: 15px, 10px, 15px, 10px;
+			clear: both;
+		}
+
+		.colunaDireita {
+			position: relative;
+			float: left;
+			margin: 15px, 10px, 15px, 10px;
+
+		}
+
+		.footer {
+			background-color: #0099cc;
+			color: #ffffff;
+			text-align: center;
+			font-size: 12px;
+			padding: 15px;
+			clear: both;
+		}
+
+
+		.hrDentroColunas {
+			width: 80%;
+		}
+
+		#alerta {
+			display: none;
+		}
+
+		/* For desktop: */
+		.col-1 {
+			width: 8.33%;
+		}
+
+		.col-2 {
+			width: 16.66%;
+		}
+
+		.col-3 {
+			width: 25%;
+		}
+
+		.col-4 {
+			width: 33.33%;
+		}
+
+		.col-5 {
+			width: 41.66%;
+		}
+
+		.col-6 {
+			width: 50%;
+		}
+
+		.col-7 {
+			width: 58.33%;
+		}
+
+		.col-8 {
+			width: 66.66%;
+		}
+
+		.col-9 {
+			width: 75%;
+		}
+
+		.col-10 {
+			width: 83.33%;
+		}
+
+		.col-11 {
+			width: 91.66%;
+		}
+
+		.col-12 {
+			width: 100%;
+		}
+
+		@media only screen and (max-width: 768px) {
+
+			/* For mobile phones: */
+			[class*="col-"] {
+				width: 100%;
+			}
+		}
+	</style>
+
+	<script>
+
+		function enviarDocumentos() {
+
+			document.getElementById("alerta").style.display = "block";
+
+		}
+		function limparAlert() {
+			document.getElementById("alerta").style.display = "none";
+
+		}
+
+	</script>
+
+</head>
+
+<body>
+
+	<div>
+
+		<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">
+						{% if username %}
+						Usuario: {{ username }}
+						{% endif %}</a>
+				</div>
+				<ul class="nav navbar-nav">
+
+					<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Minha conta
+							<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+								<li><a href="{{ url_for('atualiza_cadastro') }}"><span class="glyphicon glyphicon-user"></span>&ensp;Alterar dados</a></li>
+							<li><a href="#"><span class="glyphicon glyphicon-lock"></span>&ensp;Alterar senha</a></li>
+						</ul>
+					</li>
+
+					<li><a href="{{ url_for('uploadFiles') }}"><span
+								class="glyphicon glyphicon-barcode"></span>&ensp;Uploads</a></li>
+					
+					<li><a href="{{ url_for('downloadFiles') }}"><span
+						class="glyphicon glyphicon-barcode"></span>&ensp;Downloads</a></li>
+			
+
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					
+					<li><a href="#"><span class="glyphicon glyphicon-log-out"></span>&ensp;Logout</a></li>
+				</ul>
+			</div>
+		</nav>
+
+	</div>
+
+
+	<div id="alerta">
+		<div class="alert alert-info alert-dismissible">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong>Enviando arquivos para analise...</strong>
+		</div>
+
+	</div>
+
+
+	<form method="post" action="/" enctype="multipart/form-data">
+
+		<div class="container">
+
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Arquivos</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><input type="file" name="file" value="Enviar arquivo(s)" multiple="true" autocomplete="off">
+						</td>
+
+					</tr>
+
+				</tbody>
+			</table>
+
+
+		</div>
+		<br>
+		<p>
+			<input id="btnEnviar" type="submit" value="Enviar arquivo(s)" onClick="enviarDocumentos()">
+		</p>
+
+	</form>
+
+	<div class="footer">
+		<p>Flask adventures</p>
+	</div>
+</body>
+
+</html>

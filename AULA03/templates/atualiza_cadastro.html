@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<title>Atualizacao de cadastro</title>
+
+<html>
+
+<head>
+
+    <!--<link href="../static/bootstrap.min.css" rel="stylesheet">  -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        #btnEnviar {
+            background-color: #000000;
+            color: #ffffff;
+            position: relative;
+            float: right;
+            width: 200px;
+            height: 50px;
+            margin: 15px, 10px, 15px, 10px;
+            clear: both;
+        }
+
+
+        html {
+            font-family: "Lucida Sans", sans-serif;
+        }
+
+        body {
+            font-family: "Lucida Sans", sans-serif;
+            font-size: 14px;
+            background-color: #ffffff;
+            color: #000000;
+            padding: 10px;
+            border-style: solid;
+            border-width: 5px;
+            border-color: black;
+        }
+
+        .header {
+            background-color: #9933cc;
+            color: #ffffff;
+            padding: 15px;
+        }
+
+
+
+        .footer {
+            background-color: #0099cc;
+            color: #ffffff;
+            text-align: center;
+            font-size: 12px;
+            padding: 15px;
+            clear: both;
+        }
+
+
+
+        #alerta {
+            display: none;
+        }
+
+
+        @media only screen and (max-width: 768px) {
+
+            /* For mobile phones: */
+            [class*="col-"] {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <script>
+
+        function enviarDocumentos() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+            document.getElementById("alerta").style.display = "block";
+
+        }
+
+        function limparAlert() {
+            document.getElementById("alerta").style.display = "none";
+
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+    <div>
+
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">
+                        {% if username %}
+                        Usuario: {{ username }}
+                        {% endif %}</a>
+                </div>
+                <ul class="nav navbar-nav">
+
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Minha conta
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('atualiza_cadastro') }}"><span
+                                        class="glyphicon glyphicon-user"></span>&ensp;Alterar dados</a></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-lock"></span>&ensp;Alterar senha</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="{{ url_for('uploadFiles') }}"><span
+                                class="glyphicon glyphicon-barcode"></span>&ensp;Uploads</a></li>
+
+                    <li><a href="{{ url_for('downloadFiles') }}"><span
+                                class="glyphicon glyphicon-barcode"></span>&ensp;Downloads</a></li>
+
+
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li><a href="#"><span class="glyphicon glyphicon-log-out"></span>&ensp;Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+
+    </div>
+
+
+    <div id="alerta">
+        <div class="alert alert-info alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Atualizando dados...</strong>
+        </div>
+    </div>
+
+    <br>
+    <div>
+
+        <strong>{% if msg %}
+            Warning: {{ msg }}
+            {% endif %}</strong>
+
+    </div>
+    <br>
+
+
+
+    <form method="post" action="/atualiza_cadastro" autocomplete="off">
+
+        <div class="col-md-12 container">
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="nome" type="text" class="form-control" name="nome" placeholder="Nome">
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="sobrenome" type="text" class="form-control" name="sobrenome" placeholder="Sobrenome">
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                        <input id="email" type="text" class="form-control" name="email" placeholder="Email">
+                    </div>
+
+                </div>
+            </div>
+
+            <br>
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+                        <input id="tel01" type="text" class="form-control" name="tel01"
+                            placeholder="TEL 01: (XX)-X-XXXX-XXXX">
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-list-alt"></i></span>
+                        <input id="rg" type="text" class="form-control" name="rg" placeholder="RG: XX.XXX.XXX-X">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br>
+        <p>
+            <input id="btnEnviar" type="submit" value="Atualizar dados" onClick="enviarDocumentos()">
+        </p>
+
+    </form>
+
+    <div class="footer">
+        <p>LISTO Tech.</p>
+    </div>
+</body>
+
+</html>
