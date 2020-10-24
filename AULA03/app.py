@@ -60,6 +60,139 @@ def downloadFiles():
 	return render_template('download_file.html', username=username, onlyfiles=onlyfiles)
 
 
+@app.route('/bd', methods=['GET', 'POST'])
+def bancoDados():
+	"""
+	Descricao: essa rota redireciona a requisicao para uma pagina de estudo de banco de dados.
+	"""
+	mydb = mysql.connector.connect(
+		host="localhost",
+		user="root",
+		passwd="",
+		database="test"
+	)
+
+	mycursor = mydb.cursor()
+
+	mycursor.execute("SHOW DATABASES")
+	for x in mycursor:
+		print(x)
+
+	mycursor.execute("SHOW TABLES")
+	for x in mycursor:
+		print(x)
+
+	return "acessando o banco de dados..."
+
+
+@app.route('/atualiza_cadastro', methods=['GET', 'POST'])
+def atualiza_cadastro():
+	"""
+	Descricao: essa rota direciona a requisicao para uma pagina de atualizaco de dados no BD.
+	"""
+	mydb = mysql.connector.connect(
+		host="localhost",
+		user="root",
+		passwd="",
+		database="curso_flask"
+	)
+
+	mycursor = mydb.cursor()
+	username = "flaskman"
+	msg = ''
+	
+	if username:
+		if request.method == 'POST' and 'nome' in request.form:
+			nome = request.form['nome']
+
+			if not re.match(r'[A-Za-z]+', nome):
+				msg = "Nome deve conter somente caracteres!"
+			
+			else:
+				sql = "UPDATE usuarios SET nome = %s where login = %s"
+				val = (nome, username)
+				mycursor.execute(sql, val)
+				mydb.commit()
+			print(msg)
+
+		if request.method == 'POST' and 'sobrenome' in request.form:
+			
+			sobrenome = request.form['sobrenome']
+
+			if not re.match(r'[A-Za-z]+', sobrenome):
+				msg = "Sobrenome deve conter somente caracteres!"
+			
+			else:
+				sql = "UPDATE usuarios SET sobrenome = %s where login = %s"
+				val = (sobrenome, username)
+				mycursor.execute(sql, val)
+				mydb.commit()
+			print(msg)
+
+		if request.method == 'POST' and 'email' in request.form:
+			email = request.form['email']
+
+			if not re.match(r'[a-z]+', email):
+				msg = "email deve conter padrao de email (xxxxx@xxx.com)!"
+			
+			else:
+				sql = "UPDATE usuarios SET email = %s where login = %s"
+				val = (email, username)
+				mycursor.execute(sql, val)
+				mydb.commit()
+			print(msg)
+
+		if request.method == 'POST' and 'tel01' in request.form:
+			tel01 = request.form['tel01']
+
+			if not re.match(r'[0-9]+', tel01):
+				msg = "tel01 deve conter padrao de telefones!"
+			
+			else:
+				sql = "UPDATE usuarios SET tel01 = %s where login = %s"
+				val = (tel01, username)
+				mycursor.execute(sql, val)
+				mydb.commit()
+			print(msg)
+
+		if request.method == 'POST' and 'rg' in request.form:
+			rg = request.form['rg']
+
+			if not re.match(r'[0-9]+', rg):
+				msg = "RG deve conter somente numero!"
+			
+			else:
+				sql = "UPDATE usuarios SET rg = %s where login = %s"
+				val = (rg, username)
+				mycursor.execute(sql, val)
+				mydb.commit()
+			print(msg)
+
+		mycursor.close()
+		time.sleep(3)
+		return render_template('atualiza_cadastro.html', msg=msg, username=username)
+	return render_template('atualiza_cadastro.html', msg=msg, username=username)
+
+
+@app.route('/relatorio_bd', methods=['GET', 'POST'])
+def relatorioBD():
+	mydb = mysql.connector.connect(
+		host="localhost",
+		user="root",
+		passwd="",
+		database="curso_flask"
+	)
+
+	mycursor = mydb.cursor()
+
+	mycursor.execute("SELECT * FROM usuarios")
+
+	myresult = mycursor.fetchall()
+
+	return render_template('relatorio_bd.html', username=username, registros=myresult)
+
+
+
 @app.route('/weather', methods=['GET', 'POST'])
 def climaTempo ():
 	'''
